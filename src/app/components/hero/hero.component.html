@@ -1,0 +1,14 @@
+<div class="text-center hero my-5">
+  <div *ngIf="auth.loggedIn === false">
+    <p class="lead">Login してください。</p>
+  </div>
+
+  <div class="lead" *ngIf="auth.userProfile$ | async as profile">
+    <img
+      [src]="profile.picture"
+      alt="Profile picture"
+      class="mb-3 app-logo"
+    />
+  </div>
+</div>
+
