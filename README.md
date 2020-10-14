@@ -68,20 +68,44 @@ PS auth0-angular>ng g c components/nav-bar
 ...
 ```
 
-### 1.2 Auth0
+### 1.2 Auth0 Settings
 
-:link: [Auth0 Angular SDK Quickstarts: Login](https://auth0.com/docs/quickstart/spa/angular?framed=1&sq=1#configure-auth0)  
+![Auth0-1](auth0-1.png)  
 
-こちらのガイドを参考にして必要に応じて Angular コンポーネントを追加していく。  
+![Auth0-2](auth0-2.png)  
 
-#### 1.2.1 Auth0 Applications Settings
+![Auth0-3](auth0-3.png)  
 
-ローカルでテストする場合、次の項目に Angular で `ng serve` した URL を設定してください。  
-複数指定可能ですので、ステージング URL、本番 URL も登録しておくと便利です。  
-認証を変えたい場合、環境毎に Auth0 のアプリケーションを複数登録してください。
+![Auth0-4](auth0-4.png)  
+
+Settings の内容にローカルテストの場合、次の項目をそれぞれ設定する。  
 
 * Allowed Callback URLs : http://localhost:4200
 * Allowed Logout URLs: http://localhost:4200
 * Allowed Web Origins: http://localhost:4200
 
 
+### 1.3 Angular Auth Service
+
+Auth0 の Application の内容を設定する。  
+
+[src/app/auth/auth.service.ts](src/app/auth/auth.service.ts):
+
+
+```typescript
+ 14:      domain: '1 をコピー', // Domain
+ 15:      client_id: '2  をコピー', // Client ID
+ 16:      redirect_uri: 'http://localhost:4200' // ローカルテストの場合。
+```
+```typescript
+120:      client_id: '2  をコピー', // Client ID
+121:      returnTo: 'http://localhost:4200' // ローカルテストの場合。
+```
+
+
+![Auth0-5](auth0-5.png)  
+
+
+---
+
+:link: [Auth0 Angular SDK Quickstarts: Login](https://auth0.com/docs/quickstart/spa/angular?framed=1&sq=1#configure-auth0)  
