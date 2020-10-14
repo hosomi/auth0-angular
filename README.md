@@ -1,27 +1,111 @@
-# Auth0Angular
+# Auth0 - Angular
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.1.6.
+Auth0 authentication and authorization module & Angular.  
 
-## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+:link: [Auth0](https://auth0.com/jp/)  
+:link: [Angular](https://angular.jp/)  
 
-## Code scaffolding
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## env 
 
-## Build
+* ng --version
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+```powershell
+PS > ng --version
 
-## Running unit tests
+     _                      _                 ____ _     ___
+    / \   _ __   __ _ _   _| | __ _ _ __     / ___| |   |_ _|
+   / △ \ | '_ \ / _` | | | | |/ _` | '__|   | |   | |    | |
+  / ___ \| | | | (_| | |_| | | (_| | |      | |___| |___ | |
+ /_/   \_\_| |_|\__, |\__,_|_|\__,_|_|       \____|_____|___|
+                |___/
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-## Running end-to-end tests
+Angular CLI: 10.1.6
+Node: 12.18.1
+OS: win32 x64
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+Angular: 10.1.5
+... animations, common, compiler, compiler-cli, core, forms
+... language-service, platform-browser, platform-browser-dynamic
+... router
+Ivy Workspace: Yes
 
-## Further help
+Package                         Version
+---------------------------------------------------------
+@angular-devkit/architect       0.1001.6
+@angular-devkit/build-angular   0.1001.6
+@angular-devkit/core            10.1.6
+@angular-devkit/schematics      10.1.6
+@angular/cli                    10.1.6
+@schematics/angular             10.1.6
+@schematics/update              0.1001.6
+rxjs                            6.6.3
+typescript                      4.0.3
+```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+## 1. setup
+
+### 1.1 Angular
+
+```powershell
+PS > ng new auth0-angular
+? Would you like to add Angular routing? Yes
+? Which stylesheet format would you like to use? SCSS   [ https://sass-lang.com/documentation/syntax#scss
+      ]
+
+PS >cd .\auth0-angular\
+PS auth0-angular>
+```
+
+追加コンポーネントは適宜追加。
+
+```powershell
+PS auth0-angular>ng g s auth
+PS auth0-angular>ng g c components/nav-bar
+...
+```
+
+### 1.2 Auth0 Settings
+
+![Auth0-1](auth0-1.png)  
+
+![Auth0-2](auth0-2.png)  
+
+![Auth0-3](auth0-3.png)  
+
+![Auth0-4](auth0-4.png)  
+
+Settings の内容にローカルテストの場合、次の項目をそれぞれ設定する。  
+
+* Allowed Callback URLs : http://localhost:4200
+* Allowed Logout URLs: http://localhost:4200
+* Allowed Web Origins: http://localhost:4200
+
+
+### 1.3 Angular Auth Service
+
+Auth0 の Application の内容を設定する。  
+
+[src/app/auth/auth.service.ts](src/app/auth/auth.service.ts):
+
+
+```typescript
+ 14:      domain: '1 をコピー', // Domain
+ 15:      client_id: '2  をコピー', // Client ID
+ 16:      redirect_uri: 'http://localhost:4200' // ローカルテストの場合。
+```
+```typescript
+120:      client_id: '2  をコピー', // Client ID
+121:      returnTo: 'http://localhost:4200' // ローカルテストの場合。
+```
+
+
+![Auth0-5](auth0-5.png)  
+
+
+---
+
+:link: [Auth0 Angular SDK Quickstarts: Login](https://auth0.com/docs/quickstart/spa/angular?framed=1&sq=1#configure-auth0)  

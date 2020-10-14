@@ -10,7 +10,7 @@ describe('workspace-project App', () => {
 
   it('should display welcome message', () => {
     page.navigateTo();
-    expect(page.getTitleText()).toEqual('auth0-angular app is running!');
+    expect(page.getTitleText()).toEqual('Welcome to auth0-angular');
   });
 
   afterEach(async () => {
