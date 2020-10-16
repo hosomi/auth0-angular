@@ -20,13 +20,13 @@ PS > ng --version
   / ___ \| | | | (_| | |_| | | (_| | |      | |___| |___ | |
  /_/   \_\_| |_|\__, |\__,_|_|\__,_|_|       \____|_____|___|
                 |___/
+    
 
-
-Angular CLI: 10.1.6
+Angular CLI: 10.1.7
 Node: 12.18.1
 OS: win32 x64
 
-Angular: 10.1.5
+Angular: 10.1.6
 ... animations, common, compiler, compiler-cli, core, forms
 ... language-service, platform-browser, platform-browser-dynamic
 ... router
@@ -34,13 +34,13 @@ Ivy Workspace: Yes
 
 Package                         Version
 ---------------------------------------------------------
-@angular-devkit/architect       0.1001.6
-@angular-devkit/build-angular   0.1001.6
-@angular-devkit/core            10.1.6
-@angular-devkit/schematics      10.1.6
-@angular/cli                    10.1.6
-@schematics/angular             10.1.6
-@schematics/update              0.1001.6
+@angular-devkit/architect       0.1001.7
+@angular-devkit/build-angular   0.1001.7
+@angular-devkit/core            10.1.7
+@angular-devkit/schematics      10.1.7
+@angular/cli                    10.1.7
+@schematics/angular             10.1.7
+@schematics/update              0.1001.7
 rxjs                            6.6.3
 typescript                      4.0.3
 ```
