@@ -14,7 +14,7 @@ export class AuthService {
     createAuth0Client({
       domain: 'hosomi.auth0.com',
       client_id: 'jiO8ZtUiYbC4rdj55x4ZKINnCpEqLTZV',
-      redirect_uri: 'https://agreeable-river-06132261e.azurestaticapps.net'
+      redirect_uri: 'https://ambitious-bush-0cbc8790f.azurestaticapps.net'
     })
   ) as Observable<Auth0Client>).pipe(
     shareReplay(1), // Every subscription receives the same shared value
@@ -118,7 +118,7 @@ export class AuthService {
       // Call method to log out
       client.logout({
         client_id: 'jiO8ZtUiYbC4rdj55x4ZKINnCpEqLTZV',
-        returnTo: `https://agreeable-river-06132261e.azurestaticapps.net`
+        returnTo: `https://ambitious-bush-0cbc8790f.azurestaticapps.net`
       });
     });
   }
