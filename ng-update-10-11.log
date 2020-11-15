@@ -1,0 +1,201 @@
+PS auth0-angular> ng update @angular/core @angular/cli
+Using package manager: 'npm'
+Collecting installed dependencies...
+Found 37 dependencies.
+Fetching dependency metadata from registry...
+                  Package "@angular-devkit/build-angular" has an incompatible peer dependency to "karma" (requires "~5.1.0", would install "5.2.3")
+                  Package "@angular/core" has an incompatible peer dependency to "zone.js" (requires "~0.10.3", would install "0.11.1")
+Å~ Migration failed: Incompatible peer dependencies found.
+Peer dependency warnings when installing dependencies means that those dependencies might not work correctly together.
+You can use the '--force' option to ignore incompatible peer dependencies and instead address these warnings later.
+  See "C:\Users\kiyot\AppData\Local\Temp\ng-IziOU0\angular-errors.log" for further details.
+
+PS auth0-angular>
+PS auth0-angular> ng update @angular/core @angular/cli --force
+Using package manager: 'npm'
+Collecting installed dependencies...
+Found 37 dependencies.
+Fetching dependency metadata from registry...
+                  Package "@angular-devkit/build-angular" has an incompatible peer dependency to "karma" (requires "~5.1.0", would install "5.2.3")
+                  Package "@angular/core" has an incompatible peer dependency to "zone.js" (requires "~0.10.3", would install "0.11.1")
+    Updating package.json with dependency @angular-devkit/build-angular @ "0.1100.1" (was "0.1001.7")...
+    Updating package.json with dependency @angular/cli @ "11.0.1" (was "10.1.7")...
+    Updating package.json with dependency @angular/compiler-cli @ "11.0.0" (was "10.1.6")...
+    Updating package.json with dependency @angular/language-service @ "11.0.0" (was "10.1.6")...
+    Updating package.json with dependency tslint @ "6.1.3" (was "5.20.1")...
+    Updating package.json with dependency @angular/animations @ "11.0.0" (was "10.1.6")...
+    Updating package.json with dependency @angular/common @ "11.0.0" (was "10.1.6")...
+    Updating package.json with dependency @angular/compiler @ "11.0.0" (was "10.1.6")...
+    Updating package.json with dependency @angular/core @ "11.0.0" (was "10.1.6")...
+    Updating package.json with dependency @angular/forms @ "11.0.0" (was "10.1.6")...
+    Updating package.json with dependency @angular/platform-browser @ "11.0.0" (was "10.1.6")...
+    Updating package.json with dependency @angular/platform-browser-dynamic @ "11.0.0" (was "10.1.6")...
+    Updating package.json with dependency @angular/router @ "11.0.0" (was "10.1.6")...
+  UPDATE package.json (1603 bytes)
+Å„ Packages installed successfully.
+** Executing migrations of package '@angular/cli' **
+
+> Replace deprecated library builder '@angular-devkit/build-ng-packagr'.
+  Migration completed.
+
+> Add 'declarationMap' compiler options for non production library builds.
+  Migration completed.
+
+> Remove deprecated options from 'angular.json' that are no longer present in v11.
+  UPDATE angular.json (3582 bytes)
+  Migration completed.
+
+> Update workspace dependencies to match a new v11 project.
+  UPDATE package.json (1604 bytes)
+Å„ Packages installed successfully.
+  Migration completed.
+
+** Executing migrations of package '@angular/core' **
+
+> In Angular version 11, the type of `AbstractControl.parent` can be `null` to reflect the runtime value more accurately.
+  This migration automatically adds non-null assertions to existing accesses of the `parent` property on types like `FormControl`, `FormArray` and `FormGroup`.
+  Migration completed.
+
+> ViewEncapsulation.Native has been removed as of Angular version 11.
+  This migration replaces any usages with ViewEncapsulation.ShadowDom.
+  Migration completed.
+
+> NavigationExtras omissions migration.
+  In version 11, some unsupported properties were omitted from the `extras` parameter of the `Router.navigateByUrl` and `Router.createUrlTree` methods.
+  Migration completed.
+
+> Updates the `initialNavigation` property for `RouterModule.forRoot`.
+  Migration completed.
+
+> NavigationExtras.preserveQueryParams has been removed as of Angular version 11.
+   This migration replaces any usages with the appropriate assignment of the queryParamsHandler key.
+  Migration completed.
+
+> The default value for `relativeLinkResolution` is changing from 'legacy' to 'corrected'.
+This migration updates `RouterModule` configurations that use the default value to
+now specifically use 'legacy' to prevent breakages when updating.
+  UPDATE src/app/app-routing.module.ts (782 bytes)
+  Migration completed.
+
+> `async` to `waitForAsync` migration.
+  The `async` testing function has been renamed to `waitForAsync` to avoid confusion with the native `async` keyword.
+  UPDATE src/app/app.component.spec.ts (1156 bytes)
+  UPDATE src/app/auth/auth.guard.spec.ts (368 bytes)
+  UPDATE src/app/components/footer/footer.component.spec.ts (667 bytes)
+  UPDATE src/app/components/hero/hero.component.spec.ts (653 bytes)
+  UPDATE src/app/components/loading/loading.component.spec.ts (674 bytes)
+  UPDATE src/app/components/login/login.component.spec.ts (660 bytes)
+  UPDATE src/app/components/nav-bar/nav-bar.component.spec.ts (668 bytes)
+  UPDATE src/app/pages/home/home.component.spec.ts (653 bytes)
+  UPDATE src/app/pages/profile/profile.component.spec.ts (852 bytes)
+  Migration completed.
+
+PS auth0-angular> rmdir .\node_modules\
+
+Confirm
+The item at auth0-angular\node_modules\ has children and the Recurse parameter was not specified.
+If you continue, all children will be removed with the item. Are you sure you want to continue?
+[Y] Yes  [A] Yes to All  [N] No  [L] No to All  [S] Suspend  [?] Help (default is "Y"):
+PS auth0-angular> npm i
+
+> @fortawesome/fontawesome-common-types@0.2.32 postinstall auth0-angular\node_modules\@fortawesome\fontawesome-common-types
+> node attribution.js
+
+Font Awesome Free 0.2.32 by @fontawesome - https://fontawesome.com
+License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
+
+
+> core-js@3.6.5 postinstall auth0-angular\node_modules\core-js
+> node -e "try{require('./postinstall')}catch(e){}"
+
+Thank you for using core-js ( https://github.com/zloirock/core-js ) for polyfilling JavaScript standard library!
+
+The project needs your help! Please consider supporting of core-js on Open Collective or Patreon:
+> https://opencollective.com/core-js
+> https://www.patreon.com/zloirock
+
+Also, the author of core-js ( https://github.com/zloirock ) is looking for a good job -)
+
+
+> browser-tabs-lock@1.2.11 postinstall auth0-angular\node_modules\browser-tabs-lock
+> node scripts/postinstall.js
+
+Thank you for using browser-tabs-lock ( https://github.com/supertokens/browser-tabs-lock ).
+
+This library was created as a part of a larger project, SuperTokens( https://supertokens.io ) - the best session management solution.
+You can also check out our other projects on https://github.com/supertokens
+
+
+> @angular/cli@11.0.1 postinstall auth0-angular\node_modules\@angular\cli
+> node ./bin/postinstall/script.js
+
+
+> @fortawesome/fontawesome-svg-core@1.2.32 postinstall auth0-angular\node_modules\@fortawesome\fontawesome-svg-core
+> node attribution.js
+
+Font Awesome Free 1.2.32 by @fontawesome - https://fontawesome.com
+License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
+
+
+> @fortawesome/free-solid-svg-icons@5.15.1 postinstall auth0-angular\node_modules\@fortawesome\free-solid-svg-icons
+> node attribution.js
+
+Font Awesome Free 5.15.1 by @fontawesome - https://fontawesome.com
+License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
+
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@1.2.13 (node_modules\webpack-dev-server\node_modules\fsevents):
+npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@1.2.13: wanted {"os":"darwin","arch":"any"} (current: {"os":"win32","arch":"x64"})
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@1.2.13 (node_modules\watchpack-chokidar2\node_modules\fsevents):
+npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@1.2.13: wanted {"os":"darwin","arch":"any"} (current: {"os":"win32","arch":"x64"})
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@2.1.3 (node_modules\fsevents):
+npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@2.1.3: wanted {"os":"darwin","arch":"any"} (current: {"os":"win32","arch":"x64"})
+
+added 1531 packages from 1537 contributors and audited 1537 packages in 23.452s
+
+80 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+PS auth0-angular> ng serve -o
+Compiling @angular/core : es2015 as esm2015
+Compiling @angular/common : es2015 as esm2015
+Compiling @angular/platform-browser : es2015 as esm2015
+Compiling @angular/forms : es2015 as esm2015
+Compiling @angular/platform-browser-dynamic : es2015 as esm2015
+Compiling @angular/router : es2015 as esm2015
+Compiling @fortawesome/angular-fontawesome : es2015 as esm2015
+Compiling ngx-highlightjs : es2015 as esm2015
+Compiling @ng-bootstrap/ng-bootstrap : es2015 as esm2015
+Å„ Browser application bundle generation complete.
+
+Initial Chunk Files   | Names         |      Size
+vendor.js             | vendor        |   5.86 MB
+polyfills.js          | polyfills     | 588.39 kB
+styles.css, styles.js | styles        | 342.30 kB
+main.js               | main          |  51.00 kB
+runtime.js            | runtime       |   6.15 kB
+
+                      | Initial Total |   6.82 MB
+
+Build at: 2020-11-14T05:47:03.967Z - Hash: b9f523d6a8c72f897f96 - Time: 9093ms
+
+Warning: auth0-angular\src\environments\environment.prod.ts is part of the TypeScript compilation but it's unused.
+Add only entry points to the 'files' or 'include' properties in your tsconfig.
+
+
+
+** Angular Live Development Server is listening on localhost:4200, open your browser on http://localhost:4200/ **
+
+
+Å„ Compiled successfully.
+Å„ Browser application bundle generation complete.
+
+Initial Chunk Files   | Names  |      Size
+styles.css, styles.js | styles | 342.30 kB
+
+4 unchanged chunks
+
+Build at: 2020-11-14T05:47:08.360Z - Hash: d15e88e0982d8dd5353f - Time: 3921ms
+
+Å„ Compiled successfully.
