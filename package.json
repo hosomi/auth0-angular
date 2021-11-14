@@ -23,7 +23,7 @@
     "@fortawesome/angular-fontawesome": "^0.9.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
-    "ngx-highlightjs": "^5.0.0",
+    "ngx-highlightjs": "^6.0.0",
     "rxjs": "~7.4.0",
     "tslib": "^2.2.0",
     "zone.js": "~0.11.4"
