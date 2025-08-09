@@ -1,7 +1,5 @@
 # Auth0 - Angular
 
-[![Codeship Status for hosomi/auth0-angular](https://app.codeship.com/projects/ee3b73f0-f0c3-0138-07b5-5a73ecf79260/status?branch=main)](https://app.codeship.com/projects/413985)
-
 このリポジトリは、Auth0 を使用して認証を実装した Angular アプリケーションのサンプルです。
 
 :link: [Auth0](https://auth0.com/jp/)  
