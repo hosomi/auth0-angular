@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { NavBarComponent } from './nav-bar.component';
 
@@ -8,7 +9,8 @@ describe('NavBarComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ NavBarComponent ]
+      declarations: [ NavBarComponent ],
+      imports: [ NgbModule ]
     })
     .compileComponents();
   }));
