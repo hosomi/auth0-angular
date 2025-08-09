@@ -2,16 +2,18 @@
 
 [![Codeship Status for hosomi/auth0-angular](https://app.codeship.com/projects/ee3b73f0-f0c3-0138-07b5-5a73ecf79260/status?branch=main)](https://app.codeship.com/projects/413985)
 
+このリポジトリは、Auth0 を使用して認証を実装した Angular アプリケーションのサンプルです。
+
 :link: [Auth0](https://auth0.com/jp/)  
 :link: [Angular](https://angular.jp/)  
 
 
 ## env 
 
-* ng --version
+* ng version
 
 ```powershell
-PS auth0-angular> ng --version
+PS auth0-angular> ng version
 
      _                      _                 ____ _     ___
     / \   _ __   __ _ _   _| | __ _ _ __     / ___| |   |_ _|
@@ -21,88 +23,62 @@ PS auth0-angular> ng --version
                 |___/
 
 
-Angular CLI: 12.0.3
-Node: 14.15.0
-Package Manager: npm 6.14.8
+Angular CLI: 18.2.20
+Node: 18.13.0
+Package Manager: npm 10.5.0
 OS: win32 x64
 
-Angular: 12.0.3
-... animations, cli, common, compiler, compiler-cli, core, forms
-... language-service, platform-browser, platform-browser-dynamic
-... router
+Angular: 18.2.13
+... animations, common, compiler, core, forms, platform-browser
+... platform-browser-dynamic, router
 
 Package                         Version
 ---------------------------------------------------------
-@angular-devkit/architect       0.1200.3
-@angular-devkit/build-angular   12.0.3
-@angular-devkit/core            12.0.3
-@angular-devkit/schematics      12.0.3
-@schematics/angular             12.0.3
-rxjs                            7.1.0
-typescript                      4.2.4
+@angular-devkit/build-angular   18.2.20
+@angular/cli                    18.2.20
+@angular/compiler-cli           18.2.13
+rxjs                            7.5.6
+typescript                      5.4.5
 ```
 
 
-## 1. setup
+## 1. セットアップ
 
-### 1.1 Angular
+### 1.1 Auth0 の設定
 
-```powershell
-PS > ng new auth0-angular
-? Would you like to add Angular routing? Yes
-? Which stylesheet format would you like to use? SCSS   [ https://sass-lang.com/documentation/syntax#scss
-      ]
+Auth0 ダッシュボードで新しいアプリケーションを作成し、以下の設定を行います。
 
-PS >cd .\auth0-angular\
-PS auth0-angular>
+- **Application Type**: Single Page Application
+
+アプリケーション設定の以下の項目を後で使用するために控えておきます。
+- **Domain**
+- **Client ID**
+
+### 1.2 アプリケーションの設定
+
+次に、Angular アプリケーションで Auth0 の認証情報を設定します。プロジェクトの `src/environments/environment.ts` ファイルを開き、Auth0ダッシュボードから取得した **Domain** と **Client ID** を設定してください。
+
+```typescript:src/environments/environment.ts
+export const environment = {
+  production: false,
+  auth: {
+    domain: 'YOUR_AUTH0_DOMAIN',
+    clientId: 'YOUR_AUTH0_CLIENT_ID',
+    redirectUri: 'http://localhost:4200',
+  },
+};
 ```
 
-追加コンポーネントは適宜追加。
+### 1.3 Auth0 ダッシュボードのコールバックURL設定
 
-```powershell
-PS auth0-angular>ng g s auth
-PS auth0-angular>ng g c components/nav-bar
-...
-```
+Auth0 ダッシュボードに戻り、アプリケーション設定で以下のURLを設定します。これにより、認証後のリダイレクトとログアウトが正しく機能します。
 
-### 1.2 Auth0 Settings
+- **Allowed Callback URLs**: `http://localhost:4200`
+- **Allowed Logout URLs**: `http://localhost:4200`
+- **Allowed Web Origins**: `http://localhost:4200`
 
-![Auth0-1](auth0-1.png)  
-
-![Auth0-2](auth0-2.png)  
-
-![Auth0-3](auth0-3.png)  
-
-![Auth0-4](auth0-4.png)  
-
-Settings の内容にローカルテストの場合、次の項目をそれぞれ設定する。  
-
-* Allowed Callback URLs : http://localhost:4200
-* Allowed Logout URLs: http://localhost:4200
-* Allowed Web Origins: http://localhost:4200
-
-
-### 1.3 Angular Auth Service
-
-Auth0 の Application の内容を設定する。  
-
-[src/app/auth/auth.service.ts](src/app/auth/auth.service.ts):
-
-
-```typescript
- 14:      domain: '1 をコピー', // Domain
- 15:      client_id: '2  をコピー', // Client ID
- 16:      redirect_uri: 'http://localhost:4200' // ローカルテストの場合。
-```
-```typescript
-120:      client_id: '2  をコピー', // Client ID
-121:      returnTo: 'http://localhost:4200' // ローカルテストの場合。
-```
-
-
-![Auth0-5](auth0-5.png)  
-
+もし本番環境（`https://ambitious-bush-0cbc8790f.azurestaticapps.net`）でアプリケーションを動作させる場合は、そちらのURLも同様に各項目へ追加する必要があります。
 
 ---
 
-:link: [Auth0 Angular SDK Quickstarts: Login](https://auth0.com/docs/quickstart/spa/angular?framed=1&sq=1#configure-auth0)  
+:link: [Auth0 Angular SDK Quickstarts: Login](https://auth0.com/docs/quickstart/spa/angular/interactive)

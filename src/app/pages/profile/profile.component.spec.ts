@@ -12,9 +12,7 @@ describe('ProfileComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ProfileComponent],
       imports: [
-        HighlightModule.forRoot({
-          languages: hljsLanguages
-        })
+        HighlightModule
       ]
     }).compileComponents();
   }));
