@@ -4,6 +4,7 @@ import Auth0Client from '@auth0/auth0-spa-js/dist/typings/Auth0Client';
 import { from, of, Observable, BehaviorSubject, combineLatest, throwError } from 'rxjs';
 import { tap, catchError, concatMap, shareReplay } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -12,9 +13,9 @@ export class AuthService {
   // Create an observable of Auth0 instance of client
   auth0Client$ = (from(
     createAuth0Client({
-      domain: 'hosomi.auth0.com',
-      client_id: 'jiO8ZtUiYbC4rdj55x4ZKINnCpEqLTZV',
-      redirect_uri: 'https://ambitious-bush-0cbc8790f.azurestaticapps.net'
+      domain: environment.auth.domain,
+      client_id: environment.auth.clientId,
+      redirect_uri: environment.auth.redirectUri
     })
   ) as Observable<Auth0Client>).pipe(
     shareReplay(1), // Every subscription receives the same shared value
@@ -117,8 +118,8 @@ export class AuthService {
     this.auth0Client$.subscribe((client: Auth0Client) => {
       // Call method to log out
       client.logout({
-        client_id: 'jiO8ZtUiYbC4rdj55x4ZKINnCpEqLTZV',
-        returnTo: `https://ambitious-bush-0cbc8790f.azurestaticapps.net`
+        client_id: environment.auth.clientId,
+        returnTo: environment.auth.redirectUri
       });
     });
   }
