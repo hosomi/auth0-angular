@@ -2,6 +2,8 @@
 
 This plan is tailored for this repository and upgrades Angular **one major at a time** with rollback points after each phase.
 
+> **Troubleshooting mode used in this runbook:** for each migration failure, capture the exact error log, identify root cause, apply a minimal code/dependency fix, and re-run build/tests before continuing.
+
 ---
 
 ## 0) Baseline analysis (from `package.json`)
@@ -33,6 +35,13 @@ npx ng version
 npm ci
 npm run build
 npm test
+```
+
+Capture full logs for diagnosis (do this on every failed command):
+
+```bash
+mkdir -p .migration-logs
+npx ng update @angular/core@19 @angular/cli@19 --verbose 2>&1 | tee .migration-logs/ng-update-18-19.log
 ```
 
 ### Dependency guardrails
@@ -125,6 +134,76 @@ npm test
    + canActivate(_next: ActivatedRouteSnapshot, state: RouterStateSnapshot)
    ```
 
+### Real error patterns from this repository's migration history
+
+Below are failures that already occurred in this project during prior Angular upgrades and how to fix them safely.
+
+#### A) `Migration failed: Incompatible peer dependencies found`
+
+**Observed log excerpt**
+
+- `Package "@angular-devkit/build-angular" has an incompatible peer dependency to "karma"`
+- `Package "@angular/core" has an incompatible peer dependency to "zone.js"`
+
+**Root cause**
+
+- Existing `karma` / `zone.js` versions were outside the target Angular major's accepted peer ranges.
+
+**Exact fix**
+
+```bash
+# 1) Ask ng to compute compatible versions for target major
+npx ng update @angular/core@19 @angular/cli@19
+
+# 2) If peer conflict blocks update, align problematic peers manually
+npm install -D karma@latest karma-jasmine@latest karma-chrome-launcher@latest
+npm install zone.js@~0.15
+
+# 3) Re-run update
+npx ng update @angular/core@19 @angular/cli@19
+```
+
+**Safer alternative**
+
+- Avoid `--force` first. Use it only after recording peer warnings and planning follow-up fixes.
+
+#### B) TypeScript strictness errors after migrations
+
+**Root cause**
+
+- New Angular/TS versions tighten types, exposing nullable and inferred-type issues.
+
+**Exact fix with before/after examples**
+
+`src/app/auth/auth.service.ts`
+
+```diff
+- loggedIn: boolean = null;
++ loggedIn: boolean | null = null;
+```
+
+`src/app/auth/auth.guard.ts`
+
+```diff
+- canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot)
++ canActivate(_next: ActivatedRouteSnapshot, state: RouterStateSnapshot)
+```
+
+#### C) RxJS `throwError` signature regressions
+
+**Root cause**
+
+- RxJS modern signatures expect lazy error factories.
+
+**Exact fix with before/after example**
+
+`src/app/auth/auth.service.ts`
+
+```diff
+- catchError(err => throwError(err))
++ catchError(err => throwError(() => err))
+```
+
 ### Post-step validation
 
 ```bash
@@ -205,6 +284,17 @@ npm install @auth0/auth0-spa-js@latest
 
    **Fix**: annotate callback parameters and return types explicitly in `pipe(...)` chains.
 
+4. **Error**: Auth0 type import breaks after SDK bump.
+
+   **Why**: deep imports such as `@auth0/auth0-spa-js/dist/typings/...` are not stable API.
+
+   **Fix**:
+
+   ```diff
+   - import Auth0Client from '@auth0/auth0-spa-js/dist/typings/Auth0Client';
+   + import type { Auth0Client } from '@auth0/auth0-spa-js';
+   ```
+
 ### Example safe refactor diff (Auth0 service)
 
 ```diff
@@ -239,6 +329,16 @@ Manual checks:
 git restore .
 git clean -fd
 npm ci
+```
+
+If install state is corrupted (common after interrupted `ng update`):
+
+```bash
+git reset --hard HEAD
+git clean -fd
+rm -rf node_modules package-lock.json
+npm install
+npm run build
 ```
 
 Commit when green:
@@ -314,6 +414,17 @@ If migration command partially modifies files and fails:
    npm run build
    npm test
    ```
+
+### Mandatory failure template (use every time)
+
+For each failed command, record this in your migration notes:
+
+1. **Error log** (exact lines)
+2. **Root cause** (dependency mismatch / TS strictness / API change)
+3. **Exact fix command or code patch**
+4. **Before/after snippet**
+5. **Verification command output** (`npm run build`, `npm test`)
+6. **Safer alternative** (e.g., avoid `--force`, pin previous minor, isolate third-party bump)
 
 ---
 
