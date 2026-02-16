@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import createAuth0Client, {
+import {
   Auth0Client,
-  GetUserOptions,
   RedirectLoginOptions,
-  User
+  User,
+  createAuth0Client
 } from '@auth0/auth0-spa-js';
 import { from, of, Observable, BehaviorSubject, combineLatest, throwError } from 'rxjs';
 import { tap, catchError, concatMap, shareReplay, take } from 'rxjs/operators';
@@ -56,11 +56,11 @@ export class AuthService {
     this.handleAuthCallback();
   }
 
-  // When calling, options can be passed if desired
+  // Get the authenticated user profile
   // https://auth0.github.io/auth0-spa-js/classes/Auth0Client.html#getUser
-  getUser$(options?: GetUserOptions): Observable<User | undefined> {
+  getUser$(): Observable<User | undefined> {
     return this.auth0Client$.pipe(
-      concatMap((client: Auth0Client) => from(client.getUser(options))),
+      concatMap((client: Auth0Client) => from(client.getUser())),
       tap((user) => this.userProfileSubject$.next(user ?? null))
     );
   }
@@ -72,7 +72,6 @@ export class AuthService {
       concatMap((loggedIn: boolean) => {
         if (loggedIn) {
           // If authenticated, get user and set in app
-          // NOTE: you could pass options here if needed
           return this.getUser$();
         }
 

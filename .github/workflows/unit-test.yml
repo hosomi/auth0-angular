@@ -31,4 +31,4 @@ jobs:
       - name: Run unit tests
         env:
           CHROME_BIN: ${{ steps.setup-chrome.outputs.chrome-path }}
-        run: npm test -- --watch=false --browsers=ChromeHeadless
+        run: npm test
