@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
-import createAuth0Client from '@auth0/auth0-spa-js';
-import Auth0Client from '@auth0/auth0-spa-js/dist/typings/Auth0Client';
+import createAuth0Client, {
+  Auth0Client,
+  GetUserOptions,
+  RedirectLoginOptions,
+  User
+} from '@auth0/auth0-spa-js';
 import { from, of, Observable, BehaviorSubject, combineLatest, throwError } from 'rxjs';
-import { tap, catchError, concatMap, shareReplay } from 'rxjs/operators';
+import { tap, catchError, concatMap, shareReplay, take } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 
@@ -11,32 +15,38 @@ import { environment } from '../../environments/environment';
 })
 export class AuthService {
   // Create an observable of Auth0 instance of client
-  auth0Client$ = (from(
+  auth0Client$ = from(
     createAuth0Client({
       domain: environment.auth.domain,
-      client_id: environment.auth.clientId,
-      redirect_uri: environment.auth.redirectUri
+      clientId: environment.auth.clientId,
+      authorizationParams: {
+        redirect_uri: environment.auth.redirectUri
+      }
     })
-  ) as Observable<Auth0Client>).pipe(
+  ).pipe(
     shareReplay(1), // Every subscription receives the same shared value
-    catchError(err => throwError(err))
+    catchError((err) => throwError(() => err))
   );
+
   // Define observables for SDK methods that return promises by default
   // For each Auth0 SDK method, first ensure the client instance is ready
   // concatMap: Using the client instance, call SDK method; SDK returns a promise
   // from: Convert that resulting promise into an observable
   isAuthenticated$ = this.auth0Client$.pipe(
     concatMap((client: Auth0Client) => from(client.isAuthenticated())),
-    tap(res => this.loggedIn = res)
+    tap((res) => (this.loggedIn = res))
   );
+
   handleRedirectCallback$ = this.auth0Client$.pipe(
     concatMap((client: Auth0Client) => from(client.handleRedirectCallback()))
   );
+
   // Create subject and public observable of user profile data
-  private userProfileSubject$ = new BehaviorSubject<any>(null);
+  private userProfileSubject$ = new BehaviorSubject<User | null>(null);
   userProfile$ = this.userProfileSubject$.asObservable();
+
   // Create a local property for login status
-  loggedIn: boolean = null;
+  loggedIn = false;
 
   constructor(private router: Router) {
     // On initial load, check authentication state with authorization server
@@ -47,11 +57,11 @@ export class AuthService {
   }
 
   // When calling, options can be passed if desired
-  // https://auth0.github.io/auth0-spa-js/classes/auth0client.html#getuser
-  getUser$(options?): Observable<any> {
+  // https://auth0.github.io/auth0-spa-js/classes/Auth0Client.html#getUser
+  getUser$(options?: GetUserOptions): Observable<User | undefined> {
     return this.auth0Client$.pipe(
       concatMap((client: Auth0Client) => from(client.getUser(options))),
-      tap(user => this.userProfileSubject$.next(user))
+      tap((user) => this.userProfileSubject$.next(user ?? null))
     );
   }
 
@@ -65,10 +75,12 @@ export class AuthService {
           // NOTE: you could pass options here if needed
           return this.getUser$();
         }
+
         // If not authenticated, return stream that emits 'false'
         return of(loggedIn);
       })
     );
+
     checkAuth$.subscribe();
   }
 
@@ -76,12 +88,16 @@ export class AuthService {
     // A desired redirect path can be passed to login method
     // (e.g., from a route guard)
     // Ensure Auth0 client instance exists
-    this.auth0Client$.subscribe((client: Auth0Client) => {
-      // Call method to log in
-      client.loginWithRedirect({
-        redirect_uri: `${window.location.origin}`,
+    this.auth0Client$.pipe(take(1)).subscribe((client: Auth0Client) => {
+      const loginOptions: RedirectLoginOptions = {
+        authorizationParams: {
+          redirect_uri: `${window.location.origin}`
+        },
         appState: { target: redirectPath }
-      });
+      };
+
+      // Call method to log in
+      client.loginWithRedirect(loginOptions);
     });
   }
 
@@ -89,24 +105,23 @@ export class AuthService {
     // Call when app reloads after user logs in with Auth0
     const params = window.location.search;
     if (params.includes('code=') && params.includes('state=')) {
-      let targetRoute: string; // Path to redirect to after login processsed
+      let targetRoute = '/'; // Path to redirect to after login processed
+
       const authComplete$ = this.handleRedirectCallback$.pipe(
         // Have client, now call method to handle auth callback redirect
-        tap(cbRes => {
+        tap((cbRes) => {
           // Get and set target redirect route from callback results
-          targetRoute = cbRes.appState && cbRes.appState.target ? cbRes.appState.target : '/';
+          targetRoute = cbRes.appState?.target ?? '/';
         }),
-        concatMap(() => {
+        concatMap(() =>
           // Redirect callback complete; get user and login status
-          return combineLatest([
-            this.getUser$(),
-            this.isAuthenticated$
-          ]);
-        })
+          combineLatest([this.getUser$(), this.isAuthenticated$])
+        )
       );
+
       // Subscribe to authentication completion observable
       // Response will be an array of user and login status
-      authComplete$.subscribe(([user, loggedIn]) => {
+      authComplete$.subscribe(() => {
         // Redirect to target route after callback processing
         this.router.navigate([targetRoute]);
       });
@@ -115,13 +130,13 @@ export class AuthService {
 
   logout() {
     // Ensure Auth0 client instance exists
-    this.auth0Client$.subscribe((client: Auth0Client) => {
+    this.auth0Client$.pipe(take(1)).subscribe((client: Auth0Client) => {
       // Call method to log out
       client.logout({
-        client_id: environment.auth.clientId,
-        returnTo: environment.auth.redirectUri
+        logoutParams: {
+          returnTo: environment.auth.redirectUri
+        }
       });
     });
   }
-
 }
