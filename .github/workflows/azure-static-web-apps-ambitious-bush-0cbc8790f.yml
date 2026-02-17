@@ -1,17 +1,20 @@
 name: Azure Static Web Apps CI/CD
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    types: [opened, synchronize, reopened, closed]
-    branches:
-      - main
+  # Disabled automatic Azure Static Web Apps deployments.
+  # Original trigger preserved below for recovery:
+  # push:
+  #   branches:
+  #     - main
+  # pull_request:
+  #   types: [opened, synchronize, reopened, closed]
+  #   branches:
+  #     - main
+  workflow_dispatch:
 
 jobs:
   build_and_deploy_job:
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+    if: false # Disabled: prevent Azure Static Web Apps deploy job from running automatically
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     steps:
@@ -33,7 +36,7 @@ jobs:
           ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
-    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    if: false # Disabled: prevent Azure Static Web Apps PR close job from running automatically
     runs-on: ubuntu-latest
     name: Close Pull Request Job
     steps:
