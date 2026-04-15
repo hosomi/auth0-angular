@@ -1,6 +1,6 @@
 # Auth0 - Angular サンプル
 
-Auth0 を使った Angular（v18）向けの認証サンプルアプリです。  
+Auth0 を使った Angular（v20）向けの認証サンプルアプリです。  
 ログイン / ログアウト、認証状態の保持、認証済みユーザーのみアクセスできる保護ルート（`/profile`）を実装しています。
 
 - Auth0: https://auth0.com/jp/
@@ -10,9 +10,9 @@ Auth0 を使った Angular（v18）向けの認証サンプルアプリです。
 
 このリポジトリは以下の構成で動作します（`package.json` ベース）。
 
-- Node.js 18 系以上を推奨
+- Node.js 20 系以上を推奨
 - npm
-- Angular 18
+- Angular 20
 
 ## セットアップ
 
