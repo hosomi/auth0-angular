@@ -1,62 +1,41 @@
-# Auth0 - Angular
+# Auth0 - Angular サンプル
 
-このリポジトリは、Auth0 を使用して認証を実装した Angular アプリケーションのサンプルです。
+Auth0 を使った Angular（v18）向けの認証サンプルアプリです。  
+ログイン / ログアウト、認証状態の保持、認証済みユーザーのみアクセスできる保護ルート（`/profile`）を実装しています。
 
-:link: [Auth0](https://auth0.com/jp/)  
-:link: [Angular](https://angular.jp/)  
+- Auth0: https://auth0.com/jp/
+- Angular: https://angular.dev/
 
+## 前提環境
 
-## env 
+このリポジトリは以下の構成で動作します（`package.json` ベース）。
 
-* ng version
+- Node.js 18 系以上を推奨
+- npm
+- Angular 18
 
-```powershell
-PS auth0-angular> ng version
+## セットアップ
 
-     _                      _                 ____ _     ___
-    / \   _ __   __ _ _   _| | __ _ _ __     / ___| |   |_ _|
-   / △ \ | '_ \ / _` | | | | |/ _` | '__|   | |   | |    | |
-  / ___ \| | | | (_| | |_| | | (_| | |      | |___| |___ | |
- /_/   \_\_| |_|\__, |\__,_|_|\__,_|_|       \____|_____|___|
-                |___/
-
-
-Angular CLI: 18.2.20
-Node: 18.13.0
-Package Manager: npm 10.5.0
-OS: win32 x64
-
-Angular: 18.2.13
-... animations, common, compiler, core, forms, platform-browser
-... platform-browser-dynamic, router
-
-Package                         Version
----------------------------------------------------------
-@angular-devkit/build-angular   18.2.20
-@angular/cli                    18.2.20
-@angular/compiler-cli           18.2.13
-rxjs                            7.5.6
-typescript                      5.4.5
+```bash
+npm install
 ```
 
+## Auth0 の設定
 
-## 1. セットアップ
+### 1) Auth0 ダッシュボードでアプリ作成
 
-### 1.1 Auth0 の設定
+- **Application Type**: `Single Page Application`
 
-Auth0 ダッシュボードで新しいアプリケーションを作成し、以下の設定を行います。
+作成後、以下を控えてください。
 
-- **Application Type**: Single Page Application
-
-アプリケーション設定の以下の項目を後で使用するために控えておきます。
 - **Domain**
 - **Client ID**
 
-### 1.2 アプリケーションの設定
+### 2) 環境変数ファイルを設定
 
-次に、Angular アプリケーションで Auth0 の認証情報を設定します。プロジェクトの `src/environments/environment.ts` ファイルを開き、Auth0ダッシュボードから取得した **Domain** と **Client ID** を設定してください。
+`src/environments/environment.ts`（開発用）を設定します。
 
-```typescript:src/environments/environment.ts
+```ts
 export const environment = {
   production: false,
   auth: {
@@ -67,16 +46,46 @@ export const environment = {
 };
 ```
 
-### 1.3 Auth0 ダッシュボードのコールバックURL設定
+必要に応じて `src/environments/environment.prod.ts`（本番用）も同様に設定してください。
 
-Auth0 ダッシュボードに戻り、アプリケーション設定で以下のURLを設定します。これにより、認証後のリダイレクトとログアウトが正しく機能します。
+### 3) Auth0 側の許可 URL を設定
+
+ローカル実行時:
 
 - **Allowed Callback URLs**: `http://localhost:4200`
 - **Allowed Logout URLs**: `http://localhost:4200`
 - **Allowed Web Origins**: `http://localhost:4200`
 
-もし本番環境（`https://ambitious-bush-0cbc8790f.azurestaticapps.net`）でアプリケーションを動作させる場合は、そちらのURLも同様に各項目へ追加する必要があります。
+本番 URL で公開する場合は、その URL も上記 3 項目に追加してください。
 
----
+## 実行
 
-:link: [Auth0 Angular SDK Quickstarts: Login](https://auth0.com/docs/quickstart/spa/angular/interactive)
+```bash
+npm start
+```
+
+`npm start` は `ng serve -o` を実行し、通常は `http://localhost:4200` を自動で開きます。
+
+## ビルド / テスト
+
+```bash
+npm run build
+npm test
+```
+
+## 主要ルート
+
+- `/` : ホーム
+- `/login` : ログインページ
+- `/profile` : 認証必須ページ（未認証時は Auth0 ログインにリダイレクト）
+
+## 実装メモ
+
+- 認証処理は `@auth0/auth0-spa-js` を利用
+- `AuthService` でログイン、ログアウト、コールバック処理、ユーザー取得を管理
+- `AuthGuard` で保護ルートのアクセス制御を実施
+
+## 参考
+
+- Auth0 Angular SDK Quickstart:  
+  https://auth0.com/docs/quickstart/spa/angular/interactive
