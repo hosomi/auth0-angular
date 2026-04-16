@@ -10,7 +10,7 @@ Auth0 を使った Angular（v20）向けの認証サンプルアプリです。
 
 このリポジトリは以下の構成で動作します（`package.json` ベース）。
 
-- Node.js 20 系以上を推奨
+- Node.js 20.19 以上を推奨（`package.json` の `engines` 参照）
 - npm
 - Angular 20
 
