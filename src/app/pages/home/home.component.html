@@ -1,3 +1,5 @@
-<div class="container" *ngIf="auth.auth0Client$ | async">
-  <app-hero></app-hero>
-</div>
+@if (auth.auth0Client$ | async) {
+  <div class="container">
+    <app-hero></app-hero>
+  </div>
+}

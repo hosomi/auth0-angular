@@ -30,6 +30,8 @@ module.exports = tseslint.config(
           style: "kebab-case",
         },
       ],
+      "@angular-eslint/prefer-inject": "off",
+      "@angular-eslint/prefer-standalone": "off",
     },
   },
   {
