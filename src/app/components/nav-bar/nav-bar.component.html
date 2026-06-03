@@ -31,7 +31,7 @@
           @if (auth.loggedIn === false) {
             <li class="nav-item">
               <button
-                id="qsLoginBtn-desktop"
+                id="qsLoginBtn"
                 class="btn btn-primary btn-margin"
                 (click)="auth.login()"
                 >
@@ -76,7 +76,7 @@
                   <button
                     (click)="auth.logout()"
                     class="btn btn-link dropdown-item"
-                    id="qsLogoutBtn-desktop"
+                    id="qsLogoutBtn"
                     >
                     <fa-icon [icon]="faPowerOff" class="mr-3"></fa-icon> Log out
                   </button>
@@ -91,7 +91,7 @@
             <ul class="navbar-nav d-md-none">
               <button
                 class="btn btn-primary btn-block"
-                id="qsLoginBtn-mobile"
+                id="qsLoginBtn"
                 (click)="auth.login()"
                 >
                 Log in
@@ -129,7 +129,7 @@
                   <fa-icon [icon]="faPowerOff" class="mr-3"></fa-icon>
                   <button
                     class="btn btn-link p-0"
-                    id="qsLogoutBtn-mobile"
+                    id="qsLogoutBtn"
                     (click)="auth.logout()"
                     >
                     Log out

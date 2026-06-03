@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { createAuth0Client, Auth0Client, User } from '@auth0/auth0-spa-js';
+import createAuth0Client from '@auth0/auth0-spa-js';
+import Auth0Client from '@auth0/auth0-spa-js/dist/typings/Auth0Client';
+import { GetUserOptions, User } from '@auth0/auth0-spa-js/dist/typings/global';
 import { from, of, Observable, BehaviorSubject, combineLatest, throwError } from 'rxjs';
 import { tap, catchError, concatMap, shareReplay } from 'rxjs/operators';
 import { Router } from '@angular/router';
@@ -13,10 +15,8 @@ export class AuthService {
   auth0Client$ = (from(
     createAuth0Client({
       domain: environment.auth.domain,
-      clientId: environment.auth.clientId,
-      authorizationParams: {
-        redirect_uri: environment.auth.redirectUri
-      }
+      client_id: environment.auth.clientId,
+      redirect_uri: environment.auth.redirectUri
     })
   ) as Observable<Auth0Client>).pipe(
     shareReplay(1), // Every subscription receives the same shared value
@@ -49,9 +49,9 @@ export class AuthService {
 
   // When calling, options can be passed if desired
   // https://auth0.github.io/auth0-spa-js/classes/auth0client.html#getuser
-  getUser$(): Observable<User | undefined> {
+  getUser$(options?: GetUserOptions): Observable<User | undefined> {
     return this.auth0Client$.pipe(
-      concatMap((client: Auth0Client) => from(client.getUser())),
+      concatMap((client: Auth0Client) => from(client.getUser<User>(options))),
       tap(user => this.userProfileSubject$.next(user ?? null))
     );
   }
@@ -80,9 +80,7 @@ export class AuthService {
     this.auth0Client$.subscribe((client: Auth0Client) => {
       // Call method to log in
       client.loginWithRedirect({
-        authorizationParams: {
-          redirect_uri: environment.auth.redirectUri,
-        },
+        redirect_uri: environment.auth.redirectUri,
         appState: { target: redirectPath }
       });
     });
@@ -121,9 +119,8 @@ export class AuthService {
     this.auth0Client$.subscribe((client: Auth0Client) => {
       // Call method to log out
       client.logout({
-        logoutParams: {
-          returnTo: environment.auth.redirectUri
-        }
+        client_id: environment.auth.clientId,
+        returnTo: environment.auth.redirectUri
       });
     });
   }
