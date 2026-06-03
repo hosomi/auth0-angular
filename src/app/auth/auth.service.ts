@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import createAuth0Client from '@auth0/auth0-spa-js';
-import Auth0Client from '@auth0/auth0-spa-js/dist/typings/Auth0Client';
-import { GetUserOptions, User } from '@auth0/auth0-spa-js/dist/typings/global';
+import { createAuth0Client, Auth0Client, User } from '@auth0/auth0-spa-js';
 import { from, of, Observable, BehaviorSubject, combineLatest, throwError } from 'rxjs';
 import { tap, catchError, concatMap, shareReplay } from 'rxjs/operators';
 import { Router } from '@angular/router';
@@ -15,8 +13,10 @@ export class AuthService {
   auth0Client$ = (from(
     createAuth0Client({
       domain: environment.auth.domain,
-      client_id: environment.auth.clientId,
-      redirect_uri: environment.auth.redirectUri
+      clientId: environment.auth.clientId,
+      authorizationParams: {
+        redirect_uri: environment.auth.redirectUri
+      }
     })
   ) as Observable<Auth0Client>).pipe(
     shareReplay(1), // Every subscription receives the same shared value
@@ -49,9 +49,9 @@ export class AuthService {
 
   // When calling, options can be passed if desired
   // https://auth0.github.io/auth0-spa-js/classes/auth0client.html#getuser
-  getUser$(options?: GetUserOptions): Observable<User | undefined> {
+  getUser$(): Observable<User | undefined> {
     return this.auth0Client$.pipe(
-      concatMap((client: Auth0Client) => from(client.getUser<User>(options))),
+      concatMap((client: Auth0Client) => from(client.getUser())),
       tap(user => this.userProfileSubject$.next(user ?? null))
     );
   }
@@ -75,12 +75,14 @@ export class AuthService {
 
   login(redirectPath: string = '/') {
     // A desired redirect path can be passed to login method
-    // (e.g., from a route guard)
+    // (e.g., from a guard)
     // Ensure Auth0 client instance exists
     this.auth0Client$.subscribe((client: Auth0Client) => {
       // Call method to log in
       client.loginWithRedirect({
-        redirect_uri: environment.auth.redirectUri,
+        authorizationParams: {
+          redirect_uri: environment.auth.redirectUri,
+        },
         appState: { target: redirectPath }
       });
     });
@@ -119,8 +121,9 @@ export class AuthService {
     this.auth0Client$.subscribe((client: Auth0Client) => {
       // Call method to log out
       client.logout({
-        client_id: environment.auth.clientId,
-        returnTo: environment.auth.redirectUri
+        logoutParams: {
+          returnTo: environment.auth.redirectUri
+        }
       });
     });
   }
