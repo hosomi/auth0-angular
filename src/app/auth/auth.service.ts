@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import createAuth0Client from '@auth0/auth0-spa-js';
-import Auth0Client from '@auth0/auth0-spa-js/dist/typings/Auth0Client';
+import { createAuth0Client, Auth0Client, User } from '@auth0/auth0-spa-js';
 import { from, of, Observable, BehaviorSubject, combineLatest, throwError } from 'rxjs';
 import { tap, catchError, concatMap, shareReplay } from 'rxjs/operators';
 import { Router } from '@angular/router';
@@ -14,8 +13,10 @@ export class AuthService {
   auth0Client$ = (from(
     createAuth0Client({
       domain: environment.auth.domain,
-      client_id: environment.auth.clientId,
-      redirect_uri: environment.auth.redirectUri
+      clientId: environment.auth.clientId,
+      authorizationParams: {
+        redirect_uri: environment.auth.redirectUri
+      }
     })
   ) as Observable<Auth0Client>).pipe(
     shareReplay(1), // Every subscription receives the same shared value
@@ -33,7 +34,7 @@ export class AuthService {
     concatMap((client: Auth0Client) => from(client.handleRedirectCallback()))
   );
   // Create subject and public observable of user profile data
-  private userProfileSubject$ = new BehaviorSubject<any>(null);
+  private userProfileSubject$ = new BehaviorSubject<User | null>(null);
   userProfile$ = this.userProfileSubject$.asObservable();
   // Create a local property for login status
   loggedIn: boolean = null;
@@ -48,10 +49,10 @@ export class AuthService {
 
   // When calling, options can be passed if desired
   // https://auth0.github.io/auth0-spa-js/classes/auth0client.html#getuser
-  getUser$(options?): Observable<any> {
+  getUser$(): Observable<User | undefined> {
     return this.auth0Client$.pipe(
-      concatMap((client: Auth0Client) => from(client.getUser(options))),
-      tap(user => this.userProfileSubject$.next(user))
+      concatMap((client: Auth0Client) => from(client.getUser<User>())),
+      tap(user => this.userProfileSubject$.next(user ?? null))
     );
   }
 
@@ -79,7 +80,9 @@ export class AuthService {
     this.auth0Client$.subscribe((client: Auth0Client) => {
       // Call method to log in
       client.loginWithRedirect({
-        redirect_uri: environment.auth.redirectUri,
+        authorizationParams: {
+          redirect_uri: environment.auth.redirectUri
+        },
         appState: { target: redirectPath }
       });
     });
@@ -89,7 +92,7 @@ export class AuthService {
     // Call when app reloads after user logs in with Auth0
     const params = window.location.search;
     if (params.includes('code=') && params.includes('state=')) {
-      let targetRoute: string; // Path to redirect to after login processsed
+      let targetRoute = '/'; // Path to redirect to after login processsed
       const authComplete$ = this.handleRedirectCallback$.pipe(
         // Have client, now call method to handle auth callback redirect
         tap(cbRes => {
@@ -106,7 +109,7 @@ export class AuthService {
       );
       // Subscribe to authentication completion observable
       // Response will be an array of user and login status
-      authComplete$.subscribe(([user, loggedIn]) => {
+      authComplete$.subscribe(() => {
         // Redirect to target route after callback processing
         this.router.navigate([targetRoute]);
       });
@@ -118,8 +121,10 @@ export class AuthService {
     this.auth0Client$.subscribe((client: Auth0Client) => {
       // Call method to log out
       client.logout({
-        client_id: environment.auth.clientId,
-        returnTo: environment.auth.redirectUri
+        clientId: environment.auth.clientId,
+        logoutParams: {
+          returnTo: environment.auth.redirectUri
+        }
       });
     });
   }

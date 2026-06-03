@@ -1,20 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { faUser, faPowerOff } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
-  selector: 'app-nav-bar',
-  templateUrl: './nav-bar.component.html',
-  styleUrls: ['./nav-bar.component.css']
+    selector: 'app-nav-bar',
+    templateUrl: './nav-bar.component.html',
+    styleUrls: ['./nav-bar.component.css'],
+    standalone: false
 })
-export class NavBarComponent implements OnInit {
+export class NavBarComponent {
   isCollapsed = true;
   faUser = faUser;
   faPowerOff = faPowerOff;
 
   constructor(public auth: AuthService) { }
-
-  ngOnInit() {
-  }
-
 }

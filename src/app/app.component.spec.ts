@@ -1,6 +1,21 @@
+import { Component } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+
+@Component({
+  selector: 'app-nav-bar',
+  template: '',
+  standalone: false
+})
+class NavBarStubComponent {}
+
+@Component({
+  selector: 'app-footer',
+  template: '',
+  standalone: false
+})
+class FooterStubComponent {}
 
 describe('AppComponent', () => {
   beforeEach(waitForAsync(() => {
@@ -9,7 +24,9 @@ describe('AppComponent', () => {
         RouterTestingModule
       ],
       declarations: [
-        AppComponent
+        AppComponent,
+        NavBarStubComponent,
+        FooterStubComponent
       ],
     }).compileComponents();
   }));
@@ -20,16 +37,12 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'login-demo'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('login-demo');
-  });
-
-  it('should render title in a h1 tag', () => {
+  it('should render the application shell', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h1').textContent).toContain('Welcome to login-demo!');
+    expect(compiled.querySelector('app-nav-bar')).not.toBeNull();
+    expect(compiled.querySelector('router-outlet')).not.toBeNull();
+    expect(compiled.querySelector('app-footer')).not.toBeNull();
   });
 });
